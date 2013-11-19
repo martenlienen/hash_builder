@@ -12,6 +12,8 @@ module HashBuilder
 
     def method_missing (name, *args, &block)
       @calls << [name, args, block]
+
+      nil
     end
 
     def captured_calls

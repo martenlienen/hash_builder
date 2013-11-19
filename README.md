@@ -26,7 +26,51 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "hash_builder"
+require "json"
+require "yaml"
+
+HashBuilder.build do
+  url "https://github.com/CQQL"
+  name "CQQL"
+  age 21
+
+  interests [:ruby, :clojure] do |n|
+    name n
+  end
+
+  loves do
+    example do
+      code :yes
+    end
+  end
+end
+#=> {:url=>"https://github.com/CQQL", :name=>"CQQL", :age=>21, :interests=>[{:name=>:ruby}, {:name=>:clojure}], :loves=>{:example=>{:code=>:yes}}}
+
+hash = HashBuilder.build do
+  url "https://github.com/CQQL"
+  name "CQQL"
+  age 21
+
+  interests [:ruby, :clojure].map { |n| "Le #{n}" }.map &(HashBuilder.block do |n|
+    name n
+  end)
+
+  loves do
+    example do
+      code :yes
+    end
+  end
+end
+#=> {:url=>"https://github.com/CQQL", :name=>"CQQL", :age=>21, :interests=>[{:name=>"Le ruby"}, {:name=>"Le clojure"}], :loves=>{:example=>{:code=>:yes}}}
+
+hash.to_json
+#=> "{\"url\":\"https://github.com/CQQL\",\"name\":\"CQQL\",\"age\":21,\"interests\":[{\"name\":\"Le ruby\"},{\"name\":\"Le clojure\"}],\"loves\":{\"example\":{\"code\":\"yes\"}}}"
+
+hash.to_yaml
+#=> "---\n:url: https://github.com/CQQL\n:name: CQQL\n:age: 21\n:interests:\n- :name: Le ruby\n- :name: Le clojure\n:loves:\n  :example:\n    :code: :yes\n"
+```
 
 ## Contributing
 
