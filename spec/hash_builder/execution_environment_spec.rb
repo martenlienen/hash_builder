@@ -28,4 +28,13 @@ describe HashBuilder::ExecutionEnvironment do
 
     expect(environment.captured_calls).to eq [[:with_send, [13], nil]]
   end
+
+  it "should pass arguments to the block" do
+    var = nil
+    block = -> n { var = n }
+
+    environment.execute(744, &block)
+
+    expect(var).to eq 744
+  end
 end

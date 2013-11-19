@@ -6,8 +6,8 @@ module HashBuilder
       @calls = []
     end
     
-    def execute (&block)
-      instance_exec(&block)
+    def execute (*args, &block)
+      instance_exec(*args, &block)
     end
 
     def method_missing (name, *args, &block)
