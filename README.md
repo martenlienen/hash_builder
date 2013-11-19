@@ -70,6 +70,22 @@ hash.to_json
 
 hash.to_yaml
 #=> "---\n:url: https://github.com/CQQL\n:name: CQQL\n:age: 21\n:interests:\n- :name: Le ruby\n- :name: Le clojure\n:loves:\n  :example:\n    :code: :yes\n"
+
+# Extract and reuse functions returning hashes
+def binary_tree (n)
+  HashBuilder.build do
+    value n
+
+    if n > 1
+      left binary_tree(n - 1)
+      right binary_tree(n - 1)
+    end
+  end
+end
+
+binary_tree(3)
+
+#=> {:value=>3, :left=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}, :right=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}}
 ```
 
 ## Contributing
