@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Marten Lienen"]
   spec.email         = ["marten.lienen@gmail.com"]
   spec.description   = %q{Build hashes with the full power of ruby at your fingertips}
+  spec.summary       = %q{The readme has examples}
   spec.homepage      = "https://github.com/CQQL/hash_builder"
   spec.license       = "MIT"
 
