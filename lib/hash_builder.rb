@@ -1,5 +1,6 @@
 require "hash_builder/version"
 require "hash_builder/execution_environment"
+require "hash_builder/template"
 
 module HashBuilder
   def self.build (&block)
