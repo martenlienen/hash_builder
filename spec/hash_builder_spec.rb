@@ -30,4 +30,18 @@ describe HashBuilder do
 
     expect(hash).to eq({ numbers: [{ i: 0 }, { i: 1 }, { i: 2 }, { i: 3 }] })
   end
+
+  it "should pass the environment into nested blocks" do
+    scope = Object.new
+    scope.instance_variable_set(:@id, 13)
+
+    hash = HashBuilder.build_with_env(bindings: { user: "CQQL" }, scope: scope) do
+      user do
+        name user
+        id @id
+      end
+    end
+
+    expect(hash).to eq({ user: { id: 13, name: "CQQL" } })
+  end
 end
