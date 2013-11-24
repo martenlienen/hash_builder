@@ -21,14 +21,6 @@ describe HashBuilder do
     expect(hash).to eq({ level1: "Easy", container: { level2: "Harder" } })
   end
 
-  it "should have a macro to wrap blocks" do
-    values = (1..4).to_a.map &(HashBuilder.block do |num|
-      number num
-    end)
-
-    expect(values).to eq [{ number: 1 }, { number: 2 }, { number: 3 }, { number: 4 }]
-  end
-
   it "should iterate over enumerables if arg and block is given" do
     hash = HashBuilder.build do
       numbers (0..3).to_a do |num| 
