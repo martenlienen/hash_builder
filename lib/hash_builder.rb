@@ -18,12 +18,12 @@ module HashBuilder
 
     env.captured_messages.each do |(name, (arg), block)|
       if arg && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
-        hash[name] = arg.map do |*args|
-          HashBuilder.build_with_env(scope: scope, bindings: bindings, &block)
+        hash[name] = arg.map do |*objects|
+          HashBuilder.build_with_env(args: objects, scope: scope, bindings: bindings, &block)
         end
       elsif block
         hash[name] = HashBuilder.build_with_env(scope: scope, bindings: bindings, &block)
-      else
+      elsif arg
         hash[name] = arg
       end
     end

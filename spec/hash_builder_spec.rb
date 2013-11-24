@@ -44,4 +44,13 @@ describe HashBuilder do
 
     expect(hash).to eq({ user: { id: 13, name: "CQQL" } })
   end
+
+  it "should not set keys that have no explicit value" do
+    hash = HashBuilder.build do
+      read
+      write 1
+    end
+
+    expect(hash).to eq({ write: 1 })
+  end
 end
