@@ -5,10 +5,6 @@ require "hash_builder/template"
 
 module HashBuilder
   def self.build (*args, &block)
-    build_with_args(*args, &block)
-  end
-
-  def self.build_with_args (*args, &block)
     env = ExecEnv::Env.new
     env.exec(*args, &block)
 
