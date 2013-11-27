@@ -160,7 +160,7 @@ class User
 end
 ```
 
-This can be fixed however by explicitly passing a scope. So 
+This can be fixed however by explicitly passing a scop.e
 
 ```ruby
 class User
@@ -175,11 +175,24 @@ class User
 end
 ```
 
-But is yet another problem. If you tried to set the hash key
+But there is yet another problem. If you tried to set the hash key
 `email`, you would receive an error because the line `email email`
 would actually expand to `user.email(user.email)` if `user` is the
-user object, because `user` responds to `email`. At the moment I don't
-know how to work around this, but it should not bother you too much.
+user object, because `user` responds to `email`. The quite ugly
+workaround looks like this
+
+```ruby
+class User
+  attr_accessor :email
+
+  def to_hash
+    HashBuilder.build(scope: self) do
+      # Bypass scope and local variables
+      xsend :email, email
+    end
+  end
+end
+```
 
 ## Contributing
 
