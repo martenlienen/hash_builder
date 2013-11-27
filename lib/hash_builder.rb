@@ -8,14 +8,14 @@ module HashBuilder
     build_with_env(args: args, &block)
   end
   
-  def self.build_with_env (args: [], scope: nil, bindings: {}, &block)
+  def self.build_with_env (args: [], scope: nil, locals: {}, &block)
     env = ExecEnv::Env.new
     env.scope = scope
-    env.bindings = bindings
+    env.locals = locals
     
     block_result = env.exec(*args, &block)
 
-    messages = env.free_messages
+    messages = env.messages
 
     if messages.size > 0
       hash = {}
@@ -23,10 +23,10 @@ module HashBuilder
       messages.each do |(name, (arg), block)|
         if arg && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
           hash[name] = arg.map do |*objects|
-            HashBuilder.build_with_env(args: objects, scope: scope, bindings: bindings, &block)
+            HashBuilder.build_with_env(args: objects, scope: scope, locals: locals, &block)
           end
         elsif block
-          hash[name] = HashBuilder.build_with_env(scope: scope, bindings: bindings, &block)
+          hash[name] = HashBuilder.build_with_env(scope: scope, locals: locals, &block)
         elsif arg
           hash[name] = arg
         end

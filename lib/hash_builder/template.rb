@@ -5,7 +5,7 @@ if defined?(Rails)
 
     def self.call (template)
       <<-RUBY
-(HashBuilder.build_with_env(scope: self, bindings: local_assigns) do
+(HashBuilder.build_with_env(scope: self, locals: local_assigns) do
   #{template.source}
 end).to_json
 RUBY

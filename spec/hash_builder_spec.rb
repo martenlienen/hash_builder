@@ -23,7 +23,7 @@ describe HashBuilder do
 
   it "should iterate over enumerables if arg and block is given" do
     hash = HashBuilder.build do
-      numbers (0..3).to_a do |num| 
+      numbers (0..3).to_a do |num|
         i num
       end
     end
@@ -35,7 +35,7 @@ describe HashBuilder do
     scope = Object.new
     scope.instance_variable_set(:@id, 13)
 
-    hash = HashBuilder.build_with_env(bindings: { user: "CQQL" }, scope: scope) do
+    hash = HashBuilder.build_with_env(locals: { user: "CQQL" }, scope: scope) do
       user do
         name user
         id @id
