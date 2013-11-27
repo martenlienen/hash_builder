@@ -11,7 +11,7 @@ module HashBuilder
 
     def self.call (template)
       render_code = <<-RUBY
-HashBuilder.build_with_env(scope: self, locals: local_assigns) do
+HashBuilder.build(scope: self, locals: local_assigns) do
   #{template.source}
 end
 RUBY

@@ -35,7 +35,7 @@ describe HashBuilder do
     scope = Object.new
     scope.instance_variable_set(:@id, 13)
 
-    hash = HashBuilder.build_with_env(locals: { user: "CQQL" }, scope: scope) do
+    hash = HashBuilder.build(locals: { user: "CQQL" }, scope: scope) do
       user do
         name user
         id @id

@@ -167,7 +167,7 @@ class User
   attr_accessor :email
 
   def to_hash
-    HashBuilder.build_with_env(scope: self) do
+    HashBuilder.build(scope: self) do
       # All is fine now.
       email_address email
     end
