@@ -34,14 +34,16 @@ module HashBuilder
     if messages.size > 0
       hash = {}
       
-      messages.each do |(name, (arg), block)|
-        if arg && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
+      messages.each do |(name, args, block)|
+        arg = args.first
+        
+        if args.size == 1 && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
           hash[name] = arg.map do |*objects|
             HashBuilder.build_with_env(args: objects, scope: scope, locals: locals, &block)
           end
         elsif block
           hash[name] = HashBuilder.build_with_env(scope: scope, locals: locals, &block)
-        elsif arg
+        elsif args.size == 1
           hash[name] = arg
         end
       end

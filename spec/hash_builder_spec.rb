@@ -53,4 +53,12 @@ describe HashBuilder do
 
     expect(hash).to eq({ write: 1 })
   end
+
+  it "should allow setting keys to nil" do
+    hash = HashBuilder.build do
+      foo nil
+    end
+
+    expect(hash).to eq({ foo: nil })
+  end
 end
