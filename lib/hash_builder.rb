@@ -1,36 +1,40 @@
+require "exec_env"
+
 require "hash_builder/version"
-require "hash_builder/execution_environment"
 require "hash_builder/template"
 
 module HashBuilder
-  def self.build (&block)
-    build_with_args(&block)
+  def self.build (*args, &block)
+    build_with_env(args: args, &block)
   end
+  
+  def self.build_with_env (args: [], scope: nil, bindings: {}, &block)
+    env = ExecEnv::Env.new
+    env.scope = scope
+    env.bindings = bindings
+    
+    block_result = env.exec(*args, &block)
 
-  # Wraps a block with HashBuilder.build while passing args through, to the
-  # original block.
-  def self.block (&block)
-    lambda do |*args|
-      HashBuilder.build_with_args(*args, &block)
-    end
-  end
+    messages = env.free_messages
 
-  def self.build_with_args (*args, &block)
-    environment = HashBuilder::ExecutionEnvironment.new
-    environment.execute(*args, &block)
-
-    hash = {}
-
-    environment.captured_calls.each do |(name, (arg), block)|
-      if arg && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
-        hash[name] = arg.map &(HashBuilder.block &block)
-      elsif block
-        hash[name] = HashBuilder.build(&block)
-      else
-        hash[name] = arg
+    if messages.size > 0
+      hash = {}
+      
+      messages.each do |(name, (arg), block)|
+        if arg && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
+          hash[name] = arg.map do |*objects|
+            HashBuilder.build_with_env(args: objects, scope: scope, bindings: bindings, &block)
+          end
+        elsif block
+          hash[name] = HashBuilder.build_with_env(scope: scope, bindings: bindings, &block)
+        elsif arg
+          hash[name] = arg
+        end
       end
-    end
 
-    hash
+      hash
+    else
+      block_result
+    end
   end
 end
