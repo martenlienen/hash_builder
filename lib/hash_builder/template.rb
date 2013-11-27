@@ -16,7 +16,7 @@ module HashBuilder
 end)
 RUBY
       if !is_partial?(template)
-        render_code += ".to_json"
+        render_code = "JSON.generate(#{render_code})"
       end
       
       render_code
