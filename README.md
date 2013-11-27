@@ -49,26 +49,10 @@ end
 #=> {:url=>"https://github.com/CQQL", :name=>"CQQL", :age=>21, :interests=>[{:name=>:ruby}, {:name=>:clojure}], :loves=>{:example=>{:code=>:yes}}}
 
 hash.to_json
-
+#=> "{\"url\":\"https://github.com/CQQL\",\"name\":\"CQQL\",\"age\":21,\"interests\":[{\"name\":\"ruby\"},{\"name\":\"clojure\"}],\"loves\":{\"example\":{\"code\":\"yes\"}}}"
 
 hash.to_yaml
-
-
-# Extract and reuse functions returning hashes
-def binary_tree (n)
-  HashBuilder.build do
-    value n
-
-    if n > 1
-      left binary_tree(n - 1)
-      right binary_tree(n - 1)
-    end
-  end
-end
-
-binary_tree(3)
-
-#=> {:value=>3, :left=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}, :right=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}}
+#=> "---\n:url: https://github.com/CQQL\n:name: CQQL\n:age: 21\n:interests:\n- :name: :ruby\n- :name: :clojure\n:loves:\n  :example:\n    :code: :yes\n"
 ```
 
 ## Usage with rails
@@ -79,9 +63,9 @@ To use HashBuilder in a rails app, add the gem to your Gemfile.
 gem "hash_builder"
 ```
 
-From then on HashBuilder will render `.json_builder` templates to
+From then on HashBuilder will render `.json_builder` templates as
 JSON. But there is a special case in that HashBuilder actually renders
-partials to hashes instead of strings so that you can use partials to
+partials as hashes instead of JSON strings so that you can use them to
 create nested data structures instead of strings to use in templates.
 
 ```ruby
