@@ -1,2 +1,5 @@
 # Build artifacts
 /pkg
+
+# Bundle config
+/.bundle
