@@ -31,7 +31,7 @@ require "hash_builder"
 require "json"
 require "yaml"
 
-HashBuilder.build do
+hash = HashBuilder.build do
   url "https://github.com/CQQL"
   name "CQQL"
   age 21
@@ -128,6 +128,58 @@ JSONBuilder                    1.780000   0.090000   1.870000 (  1.872545)
 ```
 
 For some reason transforming hashes to JSON with `to_json` is really slow.
+
+## Tradeoffs
+
+This is built with [exec_env](https://github.com/CQQL/exec_env), so
+there is quite a lot of ruby magic going on under the hood. As long as
+you only use lexical bingings in your block, you won't notice
+anything.
+
+```ruby
+def render_user (user)
+  HashBuilder.build do
+    name user.name
+  end
+end
+```
+
+But your dynamic bindings will be lost, because the block is executed
+in another context.
+
+```ruby
+class User
+  attr_accessor :email
+
+  def to_hash
+    HashBuilder.build do
+      # email accessor is not available here.
+      email_address email # => Error
+    end
+  end
+end
+```
+
+This can be fixed however by explicitly passing a scope. So 
+
+```ruby
+class User
+  attr_accessor :email
+
+  def to_hash
+    HashBuilder.build_with_env(scope: self) do
+      # All is fine now.
+      email_address email
+    end
+  end
+end
+```
+
+There is yet another problem however. If you tried to set the hash key
+`email`, you would receive an error because the line `email email`
+would actually expand to `user.email(user.email)` if `user` is the
+user object, because `user` responds to `email`. At the moment I don't
+know how to work around this, but it should not bother you too much.
 
 ## Contributing
 
