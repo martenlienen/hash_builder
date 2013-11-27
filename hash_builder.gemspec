@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Marten Lienen"]
   spec.email         = ["marten.lienen@gmail.com"]
   spec.description   = %q{Build hashes with the full power of ruby at your fingertips}
+  spec.summary       = %q{The readme has examples}
   spec.homepage      = "https://github.com/CQQL/hash_builder"
   spec.license       = "MIT"
 
@@ -18,6 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.4"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rake", "~> 10.1"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "json_builder"
+
+  spec.add_dependency "exec_env"
 end
