@@ -48,28 +48,11 @@ HashBuilder.build do
 end
 #=> {:url=>"https://github.com/CQQL", :name=>"CQQL", :age=>21, :interests=>[{:name=>:ruby}, {:name=>:clojure}], :loves=>{:example=>{:code=>:yes}}}
 
-hash = HashBuilder.build do
-  url "https://github.com/CQQL"
-  name "CQQL"
-  age 21
-
-  interests [:ruby, :clojure].map { |n| "Le #{n}" }.map &(HashBuilder.block do |n|
-    name n
-  end)
-
-  loves do
-    example do
-      code :yes
-    end
-  end
-end
-#=> {:url=>"https://github.com/CQQL", :name=>"CQQL", :age=>21, :interests=>[{:name=>"Le ruby"}, {:name=>"Le clojure"}], :loves=>{:example=>{:code=>:yes}}}
-
 hash.to_json
-#=> "{\"url\":\"https://github.com/CQQL\",\"name\":\"CQQL\",\"age\":21,\"interests\":[{\"name\":\"Le ruby\"},{\"name\":\"Le clojure\"}],\"loves\":{\"example\":{\"code\":\"yes\"}}}"
+
 
 hash.to_yaml
-#=> "---\n:url: https://github.com/CQQL\n:name: CQQL\n:age: 21\n:interests:\n- :name: Le ruby\n- :name: Le clojure\n:loves:\n  :example:\n    :code: :yes\n"
+
 
 # Extract and reuse functions returning hashes
 def binary_tree (n)
@@ -87,6 +70,80 @@ binary_tree(3)
 
 #=> {:value=>3, :left=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}, :right=>{:value=>2, :left=>{:value=>1}, :right=>{:value=>1}}}
 ```
+
+## Usage with rails
+
+To use HashBuilder in a rails app, add the gem to your Gemfile.
+
+```ruby
+gem "hash_builder"
+```
+
+From then on HashBuilder will render `.json_builder` templates to
+JSON. But there is a special case in that HashBuilder actually renders
+partials to hashes instead of strings so that you can use partials to
+create nested data structures instead of strings to use in templates.
+
+```ruby
+class HashController < ApplicationController
+  def index
+    @users = [
+      { name: "CQQL", quote: "Emacs > Vim" },
+      { name: "Joshua Bloch", quote: "The cleaner and nicer the program, the faster it's going to run. And if it doesn't, it'll be easy to make it fast." }
+    ]
+  end
+end
+```
+
+```ruby
+# hash/index.json_builder
+num_users @users.size
+
+users @users.map { |u| render partial: "user", locals: { user: u } }
+```
+
+```ruby
+# hash/_user.json_builder
+name user[:name]
+name_length user[:name].size
+quote user[:quote]
+```
+
+A request to `/hash/` returns the following JSON response
+
+```json
+{
+  "num_users": 2,
+  "users": [
+    {
+      "name": "CQQL",
+      "name_length": 4,
+      "quote": "Emacs > Vim"
+    },
+    {
+      "name": "Joshua Bloch",
+      "name_length": 12,
+      "quote": "The cleaner and nicer the program, the faster it's going to run. And if it doesn't, it'll be easy to make it fast."
+    }
+  ]
+}
+```
+
+## Performance
+
+There is a [benchmark script](./benchmark.rb), that returns the
+following results on my machine
+
+```
+$ ruby benchmark.rb 
+                                   user     system      total        real
+HashBuilder                    0.650000   0.070000   0.720000 (  0.714533)
+HashBuilder + JSON.generate    1.290000   0.060000   1.350000 (  1.352620)
+HashBuilder + to_json          4.650000   0.070000   4.720000 (  4.716388)
+JSONBuilder                    1.780000   0.090000   1.870000 (  1.872545)
+```
+
+For some reason transforming hashes to JSON with `to_json` is really slow.
 
 ## Contributing
 
