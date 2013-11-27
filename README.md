@@ -175,7 +175,7 @@ class User
 end
 ```
 
-There is yet another problem however. If you tried to set the hash key
+But is yet another problem. If you tried to set the hash key
 `email`, you would receive an error because the line `email email`
 would actually expand to `user.email(user.email)` if `user` is the
 user object, because `user` responds to `email`. At the moment I don't
