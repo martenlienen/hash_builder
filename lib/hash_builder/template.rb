@@ -11,12 +11,18 @@ module HashBuilder
 
     def self.call (template)
       render_code = <<-RUBY
-(HashBuilder.build_with_env(scope: self, locals: local_assigns) do
+HashBuilder.build_with_env(scope: self, locals: local_assigns) do
   #{template.source}
-end)
+end
 RUBY
       if !is_partial?(template)
-        render_code = "JSON.generate(#{render_code})"
+        # ActiveModel defines #as_json in a way, that is not compatible
+        # with JSON.
+        if defined?(ActiveModel)
+          render_code = "ActiveSupport::JSON.encode(#{render_code})"
+        else
+          render_code = "JSON.generate(#{render_code})"
+        end
       end
       
       render_code
@@ -28,6 +34,6 @@ RUBY
   end
 end
 
-if defined?(Rails)
+if defined?(ActionView)
   ActionView::Template.register_template_handler :json_builder, HashBuilder::Template
 end
