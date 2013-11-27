@@ -4,10 +4,24 @@ require "hash_builder/version"
 require "hash_builder/template"
 
 module HashBuilder
+  # A shorthand method for everyday hash building.
   def self.build (*args, &block)
     build_with_env(args: args, &block)
   end
-  
+
+  # Build a Hash.
+  #
+  # args - Arguments to be passed to the hash
+  # scope - Method calls in the block will be sent to scope object
+  # locals - Local variables to be injected into the block
+  #
+  # Examples
+  #
+  #   HashBuilder.build_with_env(locals: {foo: 1}) do
+  #     foo foo
+  #     bar 2
+  #   end
+  #   # => { foo: 1, bar: 2}
   def self.build_with_env (args: [], scope: nil, locals: {}, &block)
     env = ExecEnv::Env.new
     env.scope = scope

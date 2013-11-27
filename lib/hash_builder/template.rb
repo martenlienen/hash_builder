@@ -1,4 +1,9 @@
 module HashBuilder
+  # Renders templates with '.json_builder' extension.
+  #
+  # If the template is a normal view, it will render a JSON string.
+  # If the template however is a partial, it renders a Hash so that
+  # json_builder files can use partials.
   class Template
     def self.default_format
       Mime::JSON
