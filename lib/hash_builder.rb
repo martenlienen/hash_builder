@@ -31,8 +31,9 @@ module HashBuilder
       
       messages.each do |(name, args, block)|
         arg = args.first
-        
-        if args.size == 1 && block && arg.is_a?(Enumerable) && !arg.is_a?(Hash)
+
+        # ActiveRecord relations respond to :map but are no Enumerable
+        if args.size == 1 && block && arg.respond_to?(:map) && !arg.is_a?(Hash)
           hash[name] = arg.map do |*objects|
             HashBuilder.build(args: objects, scope: scope, locals: locals, &block)
           end
