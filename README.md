@@ -113,6 +113,30 @@ A request to `/hash/` returns the following JSON response
 }
 ```
 
+In a rails view there is also a special syntax to create a top level array
+
+```ruby
+array @users do |user|
+  name user[:name]
+  quote user[:quote]
+end
+```
+
+Would result in
+
+```json
+[
+  {
+    "name": "CQQL",
+    "quote": "Emacs > Vim"
+  },
+  {
+    "name": "Joshua Bloch",
+    "quote": "The cleaner and nicer the program, the faster it's going to run. And if it doesn't, it'll be easy to make it fast."
+  }
+]
+```
+
 ## Performance
 
 There is a [benchmark script](./benchmark.rb), that returns the

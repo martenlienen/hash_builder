@@ -10,19 +10,28 @@ module HashBuilder
     end
 
     def self.call (template)
+      # The template is on the first line, so that line numbers in the
+      # error stacks are correct.
       render_code = <<-RUBY
-HashBuilder.build(scope: self, locals: local_assigns) do
-  #{template.source}
+hash = HashBuilder.build(scope: self, locals: local_assigns) do #{template.source} end
+
+if hash.size == 1 && hash.keys == [:array]
+  hash = hash[:array]
 end
+
+
 RUBY
+
       if !is_partial?(template)
         # ActiveModel defines #as_json in a way, that is not compatible
         # with JSON.
         if defined?(ActiveModel)
-          render_code = "ActiveSupport::JSON.encode(#{render_code})"
+          render_code += "ActiveSupport::JSON.encode(hash)"
         else
-          render_code = "JSON.generate(#{render_code})"
+          render_code += "JSON.generate(hash)"
         end
+      else
+        render_code += "hash"
       end
       
       render_code
