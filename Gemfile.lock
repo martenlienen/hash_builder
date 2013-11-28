@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hash_builder (0.1.0)
+    hash_builder (0.2.0)
       exec_env
 
 GEM
