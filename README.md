@@ -122,7 +122,7 @@ array @users do |user|
 end
 ```
 
-Would result in
+This results in
 
 ```json
 [
