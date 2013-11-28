@@ -10,9 +10,10 @@ module HashBuilder
     end
 
     def self.call (template)
+      # The template is on the first line, so that line numbers in the
+      # error stacks are correct.
       render_code = <<-RUBY
-HashBuilder.build(scope: self, locals: local_assigns) do
-  #{template.source}
+HashBuilder.build(scope: self, locals: local_assigns) do #{template.source}
 end
 RUBY
       if !is_partial?(template)
