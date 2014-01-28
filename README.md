@@ -10,20 +10,6 @@ manipulation of the results, application in more different circumstances
 and you can generate JSON and YAML with the well known `to_json` and
 `to_yaml` methods from it.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'hash_builder'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install hash_builder
-
 ## Usage
 
 ```ruby
@@ -143,7 +129,7 @@ There is a [benchmark script](./benchmark.rb), that returns the
 following results on my machine
 
 ```
-$ ruby benchmark.rb 
+$ ruby benchmark.rb
                                    user     system      total        real
 HashBuilder                    0.650000   0.070000   0.720000 (  0.714533)
 HashBuilder + JSON.generate    1.290000   0.060000   1.350000 (  1.352620)
@@ -216,6 +202,26 @@ class User
     end
   end
 end
+```
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'hash_builder'
+```
+
+And then execute:
+
+```sh
+$ bundle
+```
+
+Or install it yourself as:
+
+```sh
+$ gem install hash_builder
 ```
 
 ## Contributing
