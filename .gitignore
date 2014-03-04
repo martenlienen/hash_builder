@@ -3,3 +3,6 @@
 
 # Bundle config
 /.bundle
+
+# Lock file
+/Gemfile.lock
