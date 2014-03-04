@@ -21,19 +21,19 @@ module HashBuilder
     env = ExecEnv::Env.new
     env.scope = scope
     env.locals = locals
-    
+
     block_result = env.exec(*args, &block)
 
     messages = env.messages
 
     if messages.size > 0
       hash = {}
-      
+
       messages.each do |(name, args, block)|
         arg = args.first
 
         # ActiveRecord relations respond to :map but are no Enumerable
-        if args.size == 1 && block && arg.respond_to?(:map) && !arg.is_a?(Hash)
+        if args.size == 1 && block && arg.respond_to?(:map)
           hash[name] = arg.map do |*objects|
             HashBuilder.build(args: objects, scope: scope, locals: locals, &block)
           end

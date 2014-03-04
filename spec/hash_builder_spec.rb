@@ -21,7 +21,7 @@ describe HashBuilder do
     expect(hash).to eq({ level1: "Easy", container: { level2: "Harder" } })
   end
 
-  it "should iterate over enumerables if arg and block is given" do
+  it "should iterate over enumerables if a block is given" do
     hash = HashBuilder.build do
       numbers (0..3).to_a do |num|
         i num
@@ -29,6 +29,17 @@ describe HashBuilder do
     end
 
     expect(hash).to eq({ numbers: [{ i: 0 }, { i: 1 }, { i: 2 }, { i: 3 }] })
+  end
+
+  it "should iterate over hashes if a block is given" do
+    hash = HashBuilder.build do
+      moods({ happy: 10, sad: 1 }) do |n, r|
+        name n
+        rating r
+      end
+    end
+
+    expect(hash).to eq({ moods: [{ name: :happy, rating: 10 }, { name: :sad, rating: 1 }] })
   end
 
   it "should pass the environment into nested blocks" do
